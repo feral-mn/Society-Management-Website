@@ -1,6 +1,7 @@
 import userModel from '../models/user.model.js';
 import blacklistedTokenModel from '../models/token.model.js';
 import otpModel from '../models/otp.model.js';
+import {sendSMS, generateOTP} from '../services/otp.service.js' 
 
 const cookieOptions = {
     maxAge: 24*60*60*1000,
@@ -12,6 +13,7 @@ const cookieOptions = {
 async function register(req, res){
     const {fullname, username, email, password, flatNumber, block, mobile, isLiving, ownershipType, role, isActive, designation } = req.body;
     try{
+        console.log("Incoming request body:", req.body);
         const user = await userModel.create({fullname, username, email, password, flatNumber, block, mobile, isLiving, ownershipType, role, isActive, designation});
         const token = user.token;
         return res.status(201)
@@ -43,11 +45,12 @@ async function register(req, res){
                 error: err.message
             });
         }
+        console.error("Error during user registration:", err)
         return res.status(500).json({
             message: "Error during user registration:",
             error: err.message
         });
-        console.error("Error during user registration:", err)
+        
     }
 }
 
@@ -68,20 +71,20 @@ async function login(req, res){
         //Paswoord doesn't match
         if(!isMatch) return res.status(401).json({ message: "Incorrect Password" });
         //Password matches
-        const otp = await generateOTP();
+        if(user.role == "user") res.status(401).json({message: "You are not an admin..try logging in from user login"})
+        const otp = await generateOTP(user._id);
         const response = await sendSMS(mobile, otp);
         return res.status(201)
             .json({
                 response: response,
-                id: user._id
             })
     }
     catch(err){
+        console.error("Error during user login:", err);
         return res.status(500).json({
             message: "Error during user login:",
             error: err.message
         });
-        console.error("Error during user login:", err);
     }
 }
 
@@ -129,9 +132,15 @@ async function profile(req, res){
         message: "User profile fetched successfully",
         user: {
             id: user._id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email
+            fullname: user.fullname,
+            username: user.username,
+            email: user.email,
+            flatNumber: user.flatNumber,
+            block: user.block,
+            mobile: user.mobile,
+            isLiving: user.isLiving,
+            ownershipType: user.ownershipType,
+            role: user.role
         }
     });
 }

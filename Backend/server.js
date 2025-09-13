@@ -6,6 +6,8 @@ import morgan from'morgan'
 import connectDB from './db.js';
 import userRouter from './routes/user.route.js';
 import adminRouter from './routes/admin.route.js';
+import complaintRouter from './routes/complaint.route.js';
+import announcmentRouter from './routes/announcment.route.js';
 
 dotenv.config();
 const app = express();
@@ -17,13 +19,16 @@ app.use(morgan('dev')) // for logging requests
 connectDB();// Connect to MongoDB
 
 app.use('/api/v1/user', userRouter); // User routes
-app.use('/api/v1/captain', adminRouter); // Captain routes
+app.use('/api/v1/admin', adminRouter); // Admin routes
+app.use('/api/v1/complaint', complaintRouter); //Complaint routes
+app.use('/api/v1/announcment', announcmentRouter); //Announcment routes
+
 
 app.get('/test', (req, res) => {
     res.json({ message: "Hello from test endpoint!" });
 });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port ${process.env.PORT || 3000}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 })
 

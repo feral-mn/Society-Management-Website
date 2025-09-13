@@ -13,6 +13,7 @@ const cookieOptions = {
 async function register(req, res){
     const {fullname, username, email, password, flatNumber, block, mobile, isLiving, ownershipType, role} = req.body;
     try{
+        console.log("Incoming request body:", req.body);
         const user = await userModel.create({fullname, username, email, password, flatNumber, block, mobile, isLiving, ownershipType, role});
         const token = user.token;
         return res.status(201)
@@ -37,16 +38,18 @@ async function register(req, res){
     catch(err){
         if(err.code === 11000){
             // Duplicate key error
+            console.error("Error during user registration:", err)
             return res.status(400).json({
                 message: "Email already exists",
                 error: err.message
             });
         }
+        console.error("Error during user registration:", err)
         return res.status(500).json({
             message: "Error during user registration:",
             error: err.message
         });
-        console.error("Error during user registration:", err)
+
     }
 }
 
@@ -67,6 +70,7 @@ async function login(req, res){
         //Paswoord doesn't match
         if(!isMatch) return res.status(401).json({ message: "Incorrect Password" });
         //Password matches
+        if(user.role == "admin") return res.status(401).json({message: "You are not an user..try logging in from admin login"})
         const otp = await generateOTP(user._id);
         const response = await sendSMS(mobile, otp);
         return res.status(201)
@@ -101,7 +105,7 @@ async function verify(req, res){
                 token: token,
                 user: {
                     id: user._id,
-                    fullname: user.fulltname,
+                    fullname: user.fullname,
                     username: user.username,
                     email: user.email,
                     flatNumber: user.flatNumber,
@@ -130,7 +134,12 @@ async function profile(req, res){
             username: user.username,
             fullname: user.fullname,
             email: user.email,
-            mobile: user.mobile
+            flatNumber: user.flatNumber,
+            block: user.block,
+            mobile: user.mobile,
+            isLiving: user.isLiving,
+            ownershipType: user.ownershipType,
+            role: user.role
         }
     });
 }

@@ -7,19 +7,19 @@ const userSchema = new mongoose.Schema(
         type: String, 
         required: true, 
         trim: true,
-        minlength: [2, 'First name must be at least 2 characters long'], 
-        maxlength: [50, 'First name must be at most 50 characters long'] 
+        minlength: [2, 'Full name must be at least 2 characters long'], 
+        maxlength: [50, 'Full name must be at most 50 characters long'] 
     },
     username: { 
         type: String, 
         required: true, 
-        unique: true, 
+        // unique: true, 
         lowercase: true
     },
     email: { 
         type: String, 
         required: true, 
-        unique: true, 
+        // unique: true, 
         lowercase: true 
     },
     password: { 
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
     },
     flatNumber: { 
         type: String, 
-        required: true 
+        // required: true 
     },
     block: { 
         type: String,
@@ -37,8 +37,8 @@ const userSchema = new mongoose.Schema(
     mobile: { 
         type: String, 
         required: true,
-        minlength: [10, 'First name must be at least 2 characters long'], 
-        maxlength: [10, 'First name must be at most 50 characters long'] 
+        minlength: [10, 'must be of 10 character'], 
+        maxlength: [10, 'must be of 110 character'] 
     },
 
     isLiving: { type: Boolean, default: true },
