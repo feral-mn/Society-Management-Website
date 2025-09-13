@@ -21,8 +21,7 @@ This project provides role-based logins for **Super Admin, Admins, and Residents
 - Multiple admins can exist in the same society  
 
 ### 🏆 Super Admin Portal  
-- Single super admin with full system access  
-- Manage multiple societies  
+- Single super admin with full system access   
 - Assign and manage admins  
 - Configure high-level system settings  
 
