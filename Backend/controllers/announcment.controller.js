@@ -40,4 +40,26 @@ async function update(req, res){
 
 }
 
-export {get, register, update}
+async function deleteAnnouncment(req, res){
+  try {
+    const { id } = req.params;
+
+    const announcment = await announcmentModel.findByIdAndDelete(id);
+
+    if (!announcment) {
+      return res.status(404).json({ message: "Announcment not found" });
+    }
+
+    return res.status(200)
+        .json({
+            message: "Announcment deleted successfully",
+            announcment,
+        });
+    }catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+export {get, register, update, deleteAnnouncment}

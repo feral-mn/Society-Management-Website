@@ -1,4 +1,5 @@
 import complaintModel from "../models/complaint.model.js"
+import userModel from "../models/user.model.js"
 
 async function get(req, res){
     const user = req.user;
@@ -21,13 +22,16 @@ async function get(req, res){
 
 async function register(req, res){
     const userId = req.user._id;
-    const {title, description} = req.body
+    const {category, subCategory, description, emergency} = req.body
     try{
-        const complaint = await complaintModel.create({userId, title, description})
+        const complaint = await complaintModel.create({userId, category, subCategory, description, emergency})
         return res.status(201)
             .json({
                 complaintId: complaint._id,
-                title: complaint.title
+                category: complaint.category,
+                subCategory: complaint.subCategory,
+                description: complaint.description,
+                emergency: complaint.emergency
             })
     }catch(err){
         console.error("Error during registering complaint:", err)
@@ -40,11 +44,17 @@ async function register(req, res){
 
 async function getAll(req, res){
     try{
-        const complaints = await complaintModel.find({})
+        const complaints = await complaintModel.find({}).populate("userId", "fullname block flatNumber mobile");
+        console.log(complaints)
+        // const userDetails = [];const complaints = await complaintModel
+        // for (const element of complaints) {
+        //     const user = await userModel.findById(element.userId);    Too much Slow instead using populate function in mongoose
+        //     userDetails.push(user);
+        // }
         return res.status(201)
             .json({
                 count: complaints.length,
-                complaints: complaints
+                complaints: complaints,
             })
     }catch(err){
         console.error("Error during fetching complaint:", err)
