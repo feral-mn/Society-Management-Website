@@ -3,7 +3,7 @@ import { useAuth } from "../Context/AuthContext";
 import { Camera, Lock } from "lucide-react"; // icons
 
 function InfoCard() {
-  const { user a} = useAuth();
+  // const { user a} = useAuth();
 
   if (!user) {
     return (
