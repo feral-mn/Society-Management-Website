@@ -7,4 +7,8 @@ export default defineConfig({
     react(),      // keep if you're using React
     tailwindcss(),
   ],
+  server: {
+    host:"0.0.0.0",
+    port: 5010,
+  },
 })
