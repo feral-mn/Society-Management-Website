@@ -19,6 +19,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            # Load NVM (so npm and node work)
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd ~/Society-Management-Website || git clone https://github.com/feral-mn/Society-Management-Website.git
             cd ~/Society-Management-Website
             git pull origin main
