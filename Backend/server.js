@@ -25,7 +25,7 @@ app.use('/api/v1/announcment', announcmentRouter); //Announcment routes
 
 
 app.get('/test', (req, res) => {
-    res.json({ message: "Hello from test endpoint!" });
+    res.json({ message: "Hello from test endpoint! And It's working" });
 });
 
 app.listen(process.env.PORT, () => {
